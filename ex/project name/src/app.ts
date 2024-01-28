@@ -14,6 +14,7 @@ import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import { connect } from 'mongoose';
+import { auth } from './utils/auth';
 
 export class App {
   public app: express.Application;
@@ -49,7 +50,8 @@ export class App {
     await dbConnection();
   }
 
-  private initializeMiddlewares() {
+  private async initializeMiddlewares() {
+    this.app.use(express.urlencoded());
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(hpp());

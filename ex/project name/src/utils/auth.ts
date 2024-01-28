@@ -1,9 +1,9 @@
 import { lucia } from 'lucia';
 import { mongoose as mongooseAdapter } from '@lucia-auth/adapter-mongoose';
 import { express } from 'lucia/middleware';
+import { KeyModel } from '@/models/key.model';
 import { UserModel } from '@/models/user.model';
 import { SessionModel } from '@/models/session.model';
-import { KeyModel } from '@/models/key.model';
 
 export const auth = lucia({
   adapter: mongooseAdapter({
@@ -13,7 +13,7 @@ export const auth = lucia({
     Key: KeyModel,
     Session: SessionModel,
   }),
-  env: process.env.NODE_ENV === 'development' ? 'DEV' : 'PROD',
+  env: 'DEV',
   middleware: express(),
   csrfProtection: false,
 

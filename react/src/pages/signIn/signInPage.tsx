@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { queryClient } from "../../main";
 import { z } from "zod";
@@ -27,23 +27,32 @@ export const SignInPage = () => {
     schema: emailPasswordSignInSchema,
   });
   const navigate = useNavigate();
-
+  // const places = useQuery({
+  //   queryKey: ["places", ""],
+  //   queryFn: async () =>
+  //     axios
+  //       .get<{
+  //         items: {
+  //           _id: string;
+  //           title: string;
+  //           description: string;
+  //           image: string;
+  //           services: { _id: string; title: string; price: string }[];
+  //         }[];
+  //       }>("/auth/sign-in")
+  //       .then((r) => r.data),
+  // });
+  // console.log(places.data);
   const emailPasswordSignInMutation = useMutation({
     mutationKey: ["login"],
-    mutationFn: ({
-      username,
-      password,
-    }: {
-      username: string;
-      password: string;
-    }) =>
+    mutationFn: () =>
       axios.post(
         "/auth/sign-in",
         {
-          username,
-          password,
+          username: "Login1",
+          password: "Tajne123$",
         },
-        { withCredentials: true }
+        // { withCredentials: true },
       ),
     onSuccess: () => {
       navigate("/");
@@ -62,12 +71,9 @@ export const SignInPage = () => {
   });
 
   const onSubmitEmailPasswordSignIn = async (
-    values: EmailPasswordSignUpFormValues
+    values: EmailPasswordSignUpFormValues,
   ) => {
-    emailPasswordSignInMutation.mutate({
-      username: values.username,
-      password: values.password,
-    });
+    emailPasswordSignInMutation.mutate();
   };
   return (
     <LayoutWithHeading title="Logowanie">
@@ -75,7 +81,7 @@ export const SignInPage = () => {
         <Section>
           <form
             onSubmit={emailPasswordSignInForm.handleSubmit(
-              onSubmitEmailPasswordSignIn
+              onSubmitEmailPasswordSignIn,
             )}
             className="grid gap-4"
           >
@@ -107,7 +113,7 @@ export const SignInPage = () => {
         </Section>
       </ChildrenWrapper>
 
-      <div className="flex gap-1 text-center justify-center">
+      <div className="flex justify-center gap-1 text-center">
         Nie masz jeszcze konta
         <Link className="text-blue-600" to={"/register"}>
           Rejestracja
