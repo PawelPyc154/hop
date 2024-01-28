@@ -6,9 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-interface TopBarProps {}
-
-export const TopBar = ({}: TopBarProps) => {
+export const TopBar = () => {
   const auth = useAuth();
   const logoutMutation = useMutation({
     mutationKey: ["logout"],

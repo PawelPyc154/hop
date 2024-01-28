@@ -1,7 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import { VisitStatus as VisitStatusType } from "types";
+
+type VisitStatusType = "pending" | "completed" | "canceled" | "confirmed";
 
 const colors: Record<VisitStatusType, string> = {
   pending: `text-yellow-600`,

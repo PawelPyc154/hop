@@ -1,9 +1,8 @@
-/* eslint-disable react/button-has-type */
 import clsx from "clsx";
 import React, { forwardRef, ReactNode } from "react";
 import tw from "tailwind-styled-components";
 import { Spinner } from "../common/spinner";
-import { Link, LinkProps, NavLink } from "react-router-dom";
+import { LinkProps, NavLink } from "react-router-dom";
 
 const colors = {
   none: ``,
@@ -66,7 +65,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
       ...props
     },
-    ref
+    ref,
   ) => (
     <button
       ref={ref}
@@ -91,7 +90,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       {children}
       {isLoading && <Spinner size="sm" />}
     </button>
-  )
+  ),
 );
 
 Button.displayName = "Button";
@@ -122,7 +121,7 @@ export const ButtonRadio = forwardRef<HTMLInputElement, ButtonRadioProps>(
       colorVariantsActive = "gray",
       onChange,
     },
-    ref
+    ref,
   ) => (
     <div
       className={getContainerStyles({
@@ -155,7 +154,7 @@ export const ButtonRadio = forwardRef<HTMLInputElement, ButtonRadioProps>(
       ) : null}
       {children}
     </div>
-  )
+  ),
 );
 ButtonRadio.displayName = "ButtonRadio";
 
@@ -173,7 +172,7 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
       iconWrapperClassName,
       ...props
     },
-    ref
+    ref,
   ) => (
     <NavLink
       ref={ref}
@@ -197,7 +196,7 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
       ) : null}
       {children}
     </NavLink>
-  )
+  ),
 );
 LinkButton.displayName = "LinkButton";
 
@@ -218,7 +217,7 @@ export const LinkNativeButton = forwardRef<
       iconWrapperClassName,
       ...props
     },
-    ref
+    ref,
   ) => (
     <a
       ref={ref}
@@ -240,7 +239,7 @@ export const LinkNativeButton = forwardRef<
       ) : null}
       {children}
     </a>
-  )
+  ),
 );
 LinkNativeButton.displayName = "LinkButton";
 
@@ -271,5 +270,5 @@ const getContainerStyles = ({
     colors[color],
     isLoading && ["pointer-events-none", loadingColors[color]],
     sizes[size],
-    className
+    className,
   );

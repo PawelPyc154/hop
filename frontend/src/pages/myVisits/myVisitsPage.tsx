@@ -6,13 +6,14 @@ import { MobileTableKeyValueRender } from "../../components/common/table/mobileT
 import { ButtonsWrapper } from "../../components/form/buttonsWrapper";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { VisitStatus as VisitStatusType } from "types";
 import { VisitStatus } from "../../components/visitStatus";
 import { Button } from "../../components/form/button";
 import { Tooltip } from "../../components/common/tooltip";
 import { IoAddOutline } from "react-icons/io5";
 import { LiaStopCircleSolid } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
+
+type VisitStatusType = "pending" | "completed" | "canceled" | "confirmed";
 
 type Visit = {
   id: string;
@@ -61,7 +62,7 @@ export const MyVisitsPage = () => {
         header: () => "Akcje",
         enableSorting: false,
         meta: { justify: "end", classNameThTd: "w-0" },
-        cell: (item) => (
+        cell: () => (
           <ButtonsWrapper>
             <Tooltip content={"Jeszcze raz"}>
               <Button
@@ -91,7 +92,7 @@ export const MyVisitsPage = () => {
         ),
       }),
     ],
-    []
+    [],
   );
   const places = useQuery({
     queryKey: ["my-visits"],

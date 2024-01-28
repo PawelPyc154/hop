@@ -1,7 +1,6 @@
 import tw from "tailwind-styled-components";
 import { Categories } from "./components/categories";
 import { Places } from "./components/places";
-import { useParams } from "react-router-dom";
 
 export const PlacesPage = () => {
   return (

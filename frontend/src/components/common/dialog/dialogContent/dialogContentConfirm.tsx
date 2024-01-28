@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
-
 import { MouseEventHandler } from "react";
 import { useDialogContext } from "../dialogProvider";
 import { ButtonsWrapper } from "../../../form/buttonsWrapper";

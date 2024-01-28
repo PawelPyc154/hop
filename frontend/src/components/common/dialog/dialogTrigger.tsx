@@ -1,8 +1,6 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-unused-vars */
 
-import { cloneElement, forwardRef, ReactNode, useEffect, useRef } from "react";
+import { cloneElement, forwardRef, ReactNode } from "react";
 import { DialogProvider } from "./dialogProvider";
 import { DialogBase, DialogBaseSizes } from "./dialogBase";
 import { callAll } from "../../../utils/callAll";
@@ -23,7 +21,7 @@ export const DialogTrigger = forwardRef<HTMLElement, DialogProps>(
             ref: ref,
             onClick: callAll(
               () => setIsOpenDialog(true),
-              trigger.props.onClick
+              trigger.props.onClick,
             ),
           })}
 
@@ -39,6 +37,6 @@ export const DialogTrigger = forwardRef<HTMLElement, DialogProps>(
         </>
       )}
     </DialogProvider>
-  )
+  ),
 );
 DialogTrigger.displayName = "";

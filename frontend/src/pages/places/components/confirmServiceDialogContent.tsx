@@ -1,9 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { ButtonSelectBorderControl } from "../../../components/form/buttonSelectBorder/buttonSelectBorderControl";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
-import { queryClient } from "../../../main";
 import { Button } from "../../../components/form/button";
 import { useForm } from "../../../hook/useForm";
 import { ButtonSelectControl } from "../../../components/form/buttonSelect/buttonSelectControl";
@@ -13,7 +10,7 @@ export const confirmServiceFormSchema = z.object({
   hour: z.number(),
 });
 
-type ConfirmServiceFormValues = z.infer<typeof confirmServiceFormSchema>;
+// type ConfirmServiceFormValues = z.infer<typeof confirmServiceFormSchema>;
 interface ConfirmServiceDialogContentProps {
   serviceId: string;
   placeId: string;
@@ -27,44 +24,31 @@ export const ConfirmServiceDialogContent = ({
 
     schema: confirmServiceFormSchema,
   });
-  const navigate = useNavigate();
 
   const addVisitMutation = useMutation({
     mutationKey: ["add-visit"],
-    mutationFn: ({
-      username,
-      password,
-    }: {
-      username: string;
-      password: string;
-    }) =>
+    mutationFn: () =>
       axios.post(
         "/my-visits",
         {
           serviceId,
           placeId,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       ),
     // onSuccess: () => {
     //   // navigate("/");
     //   // queryClient.invalidateQueries();
     // },
-    onError() {},
   });
 
-  const onSubmitEmailPasswordSignIn = async (
-    values: ConfirmServiceFormValues
-  ) => {
-    addVisitMutation.mutate({
-      username: " values.username",
-      password: "values.password",
-    });
+  const onSubmitEmailPasswordSignIn = async () => {
+    addVisitMutation.mutate();
   };
   return (
     <form
       onSubmit={emailPasswordSignInForm.handleSubmit(
-        onSubmitEmailPasswordSignIn
+        onSubmitEmailPasswordSignIn,
       )}
       className="grid gap-4"
     >

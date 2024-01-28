@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -39,7 +39,7 @@ interface TableProps<TTableData extends TableData> {
         cell: ReactNode;
         header: ReactNode;
       }
-    >
+    >,
   ) => ReactNode;
   // eslint-disable-next-line no-unused-vars
   actionsOnSelectedElementsRender?: (options: { ids: string[] }) => ReactNode;
@@ -108,9 +108,9 @@ const TablePage = <TTableData extends TableData = TableData>({
                       {header.isPlaceholder ? null : (
                         <button
                           className={clsx(
-                            "px-2 font-normal flex w-full",
+                            "flex w-full px-2 font-normal",
                             justifyVariants[justify],
-                            column.getCanSort() && "cursor-pointer select-none"
+                            column.getCanSort() && "cursor-pointer select-none",
                           )}
                           onClick={column.getToggleSortingHandler()}
                           type="button"
@@ -126,12 +126,13 @@ const TablePage = <TTableData extends TableData = TableData>({
                               justify === "end" && `mr-0`,
                               justify === "end" && isSorted && `ml-0`,
                               isSorted && `!mr-0`,
-                              column.columnDef.enableSorting === false && "!m-0"
+                              column.columnDef.enableSorting === false &&
+                                "!m-0",
                             )}
                           >
                             {flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                           </span>
                           {justify !== "end" && (
@@ -161,12 +162,12 @@ const TablePage = <TTableData extends TableData = TableData>({
                         className={clsx(
                           "flex px-2 py-2",
                           justifyVariants[justify],
-                          meta?.className
+                          meta?.className,
                         )}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </div>
                     </td>
@@ -196,22 +197,22 @@ const TablePage = <TTableData extends TableData = TableData>({
                           TTableData,
                           unknown
                         >
-                      ).getContext()
+                      ).getContext(),
                     ),
                     cell: flexRender(
                       cell.column.columnDef.cell,
-                      cell.getContext()
+                      cell.getContext(),
                     ),
                   },
-                ])
-              )
+                ]),
+              ),
             )}
           </Fragment>
         ))}
       </div>
 
       <FooterWrapper
-        className={clsx(isLoading && `opacity-30 pointer-events-none`)}
+        className={clsx(isLoading && `pointer-events-none opacity-30`)}
       >
         {actionsOnSelectedElementsRender?.({
           ids: table
