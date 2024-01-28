@@ -16,7 +16,7 @@ export const auth = lucia({
     // @ts-expect-error
     Session: SessionModel,
   }),
-  env: "DEV",
+  env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
   middleware: express(),
   csrfProtection: false,
 
