@@ -5,7 +5,6 @@ import { useAuth } from "../context/auth";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { queryClient } from "src/main";
 
 export const TopBar = () => {
   const auth = useAuth();
@@ -36,9 +35,6 @@ export const TopBar = () => {
         },
         { withCredentials: true },
       ),
-    onSuccess: () => {
-      queryClient.invalidateQueries();
-    },
   });
 
   return (
