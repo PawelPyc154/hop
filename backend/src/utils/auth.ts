@@ -20,7 +20,7 @@ export const auth = lucia({
   sessionCookie: {
     name: "auth_session",
     expires: false,
-    attributes: { sameSite: "none", domain: DOMAIN, path: "/" },
+    attributes: { sameSite: "lax", domain: DOMAIN, path: "/" },
   },
   env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
   middleware: express(),
