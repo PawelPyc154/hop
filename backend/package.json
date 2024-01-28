@@ -9,14 +9,8 @@
     "dev": "vite",
     "build": "vite build",
     "start": "node dist/index.jsh",
-    "dev2": "cross-env NODE_ENV=development nodemon",
-    "build2": "swc src -d dist --source-maps --copy-files",
-    "build:tsc": "tsc && tsc-alias",
     "test": "jest --forceExit --detectOpenHandles",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
-    "lint:fix": "npm run lint -- --fix",
-    "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
-    "deploy:dev": "pm2 start ecosystem.config.js --only dev"
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/"
   },
   "dependencies": {
     "@lucia-auth/adapter-mongoose": "^3.0.1",
