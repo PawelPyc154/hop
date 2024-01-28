@@ -6,7 +6,7 @@ import { KeyModel } from "../models/key.model";
 import { UserModel } from "../models/user.model";
 import { SessionModel } from "../models/session.model";
 import "lucia/polyfill/node";
-import { DOMAIN } from "../config";
+import { DOMAIN, ELO } from "../config";
 
 export const auth = lucia({
   adapter: mongooseAdapter({
@@ -20,7 +20,7 @@ export const auth = lucia({
   sessionCookie: {
     name: "auth_session",
     expires: false,
-    attributes: { sameSite: "lax", domain: DOMAIN, path: "/" },
+    attributes: { sameSite: "lax", domain: ELO, path: "/" },
   },
   env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
   middleware: express(),

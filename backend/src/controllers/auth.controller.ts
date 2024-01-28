@@ -4,7 +4,7 @@ import { RequestWithUser } from "../interfaces/auth.interface";
 // import { AuthService } from '../services/auth.service';
 import { auth } from "../utils/auth";
 import mongoose from "mongoose";
-import { DOMAIN } from "../config";
+import { DOMAIN, ELO } from "../config";
 
 export class AuthController {
   // public auth = Container.get(AuthService);
@@ -57,6 +57,7 @@ export class AuthController {
 
   public signIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("ELO", ELO);
       console.log("DOMAIN", DOMAIN);
       const { username, password } = req.body;
       // basic check

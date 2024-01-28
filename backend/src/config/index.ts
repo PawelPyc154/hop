@@ -10,5 +10,6 @@ export const {
   LOG_DIR,
   ORIGIN,
   DOMAIN,
+  ELO,
 } = process.env;
 export const { DATABASE } = process.env;
