@@ -89,7 +89,7 @@ const auth = lucia({
   }),
   sessionCookie: {
     name: "auth_session",
-    expires: true,
+    expires: false,
     attributes: { sameSite: "none", domain: DOMAIN, path: "/" }
   },
   env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
