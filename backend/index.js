@@ -66,7 +66,7 @@ const SessionSchema = new Schema(
 );
 const SessionModel = model("Session", SessionSchema);
 config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
-const CREDENTIALS = process.env.CREDENTIALS === "true";
+process.env.CREDENTIALS === "true";
 const {
   NODE_ENV,
   PORT,
@@ -182,7 +182,7 @@ class App {
     this.app.use(express$1.urlencoded());
     this.app.use(morgan(LOG_FORMAT));
     console.log(typeof ORIGIN);
-    this.app.use(cors({ origin: true, credentials: CREDENTIALS }));
+    this.app.use(cors({ origin: true, credentials: true }));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
