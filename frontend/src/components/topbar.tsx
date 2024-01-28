@@ -5,6 +5,7 @@ import { useAuth } from "../context/auth";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { queryClient } from "src/main";
 
 export const TopBar = () => {
   const auth = useAuth();
@@ -17,9 +18,44 @@ export const TopBar = () => {
 
     gcTime: 1000 * 10,
   });
+
+  const emailPasswordSignInMutation = useMutation({
+    mutationKey: ["login"],
+    mutationFn: ({
+      username,
+      password,
+    }: {
+      username: string;
+      password: string;
+    }) =>
+      axios.post(
+        "/auth/sign-in",
+        {
+          username: username,
+          password: password,
+        },
+        { withCredentials: true },
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  });
+
   return (
     <Container>
       <LeftWrapper>
+        <Button
+          color="gray"
+          onClick={() => {
+            emailPasswordSignInMutation.mutate({
+              username: "Login1",
+              password: "Tajne123$",
+            });
+          }}
+        >
+          Wyloguj
+        </Button>
+
         <LinkButton to="/" color="gray">
           Oferty
         </LinkButton>
