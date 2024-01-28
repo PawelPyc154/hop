@@ -4,6 +4,7 @@ import { RequestWithUser } from "../interfaces/auth.interface";
 // import { AuthService } from '../services/auth.service';
 import { auth } from "../utils/auth";
 import mongoose from "mongoose";
+import { DOMAIN } from "../config";
 
 export class AuthController {
   // public auth = Container.get(AuthService);
