@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
-import { Container } from 'typedi';
-import { RequestWithUser } from '../interfaces/auth.interface';
+import { NextFunction, Request, Response } from "express";
+import { Container } from "typedi";
+import { RequestWithUser } from "../interfaces/auth.interface";
 // import { AuthService } from '../services/auth.service';
-import { auth } from '../utils/auth';
-import mongoose from 'mongoose';
+import { auth } from "../utils/auth";
+import mongoose from "mongoose";
 
 export class AuthController {
   // public auth = Container.get(AuthService);
@@ -56,17 +56,30 @@ export class AuthController {
 
   public signIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("DOMAIN", DOMAIN);
       const { username, password } = req.body;
       // basic check
-      if (typeof username !== 'string' || username.length < 1 || username.length > 31) {
-        await res.status(400).send('Invalid username');
+      if (
+        typeof username !== "string" ||
+        username.length < 1 ||
+        username.length > 31
+      ) {
+        await res.status(400).send("Invalid username");
       }
-      if (typeof password !== 'string' || password.length < 1 || password.length > 255) {
-        await res.status(400).send('Invalid password');
+      if (
+        typeof password !== "string" ||
+        password.length < 1 ||
+        password.length > 255
+      ) {
+        await res.status(400).send("Invalid password");
       }
       // find user by key
       // and validate password
-      const key = await auth.useKey('username', username.toLowerCase(), password);
+      const key = await auth.useKey(
+        "username",
+        username.toLowerCase(),
+        password
+      );
 
       const session = await auth.createSession({
         userId: key.userId,
@@ -75,7 +88,7 @@ export class AuthController {
       const authRequest = auth.handleRequest(req, res);
       authRequest.setSession(session);
       // redirect to profile page
-      return res.status(200).json({ message: 'success' });
+      return res.status(200).json({ message: "success" });
       // // check for unique constraint error in user table
       // if (
       //   e instanceof LuciaError &&
