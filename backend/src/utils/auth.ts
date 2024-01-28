@@ -18,7 +18,7 @@ export const auth = lucia({
     Session: SessionModel,
   }),
   sessionCookie: {
-    name: "auth_session	",
+    name: "auth_session",
     expires: false,
     attributes: { sameSite: "lax", domain: DOMAIN, path: "/" },
   },
