@@ -18,6 +18,7 @@ const Layout = () => {
 };
 
 export const App = () => {
+  console.log(import.meta.env.VITE_API_BASE_URL);
   const { isAuthenticated } = useAuth();
   return (
     <Routes>

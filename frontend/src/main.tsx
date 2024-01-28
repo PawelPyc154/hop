@@ -6,7 +6,7 @@ import axios from "axios";
 import { App } from "./app";
 import { BrowserRouter } from "react-router-dom";
 
-axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
 export const queryClient = new QueryClient();
 
