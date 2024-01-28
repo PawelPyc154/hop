@@ -11,5 +11,5 @@ export const {
   ORIGIN,
   DOMAIN,
   ELO,
+  DATABASE,
 } = process.env;
-export const { DATABASE } = process.env;
