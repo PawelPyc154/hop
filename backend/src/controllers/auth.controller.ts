@@ -106,21 +106,25 @@ export class AuthController {
     }
   };
 
-  // public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-  //   try {
-  //     const authRequest = auth.handleRequest(req, res);
-  //     const session = await authRequest.validate(); // or `authRequest.validateBearerToken()`
-  //     if (!session) {
-  //       return res.sendStatus(401);
-  //     }
-  //     await auth.invalidateSession(session.sessionId);
+  public logOut = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const authRequest = auth.handleRequest(req, res);
+      const session = await authRequest.validate(); // or `authRequest.validateBearerToken()`
+      if (!session) {
+        return res.sendStatus(401);
+      }
+      await auth.invalidateSession(session.sessionId);
 
-  //     authRequest.setSession(null); // for session cookie
+      authRequest.setSession(null); // for session cookie
 
-  //     // redirect back to login page
-  //     return res.status(200).json({ message: 'success' });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
+      // redirect back to login page
+      return res.status(200).json({ message: "success" });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
