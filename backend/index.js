@@ -3,6 +3,8 @@ import { lucia } from "lucia";
 import { mongoose } from "@lucia-auth/adapter-mongoose";
 import { express } from "lucia/middleware";
 import { Schema, model, set, connect } from "mongoose";
+import "lucia/polyfill/node";
+import { config } from "dotenv";
 import "reflect-metadata";
 import compression from "compression";
 import cookieParser from "cookie-parser";
@@ -12,7 +14,6 @@ import hpp from "hpp";
 import morgan from "morgan";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { config } from "dotenv";
 const KeySchema = new Schema(
   {
     _id: {
@@ -64,6 +65,19 @@ const SessionSchema = new Schema(
   { _id: false }
 );
 const SessionModel = model("Session", SessionSchema);
+config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
+const CREDENTIALS = process.env.CREDENTIALS === "true";
+const {
+  NODE_ENV,
+  PORT,
+  SECRET_KEY,
+  LOG_FORMAT,
+  LOG_DIR,
+  ORIGIN,
+  DOMAIN,
+  ELO,
+  DATABASE
+} = process.env;
 const auth = lucia({
   adapter: mongoose({
     // @ts-expect-error
@@ -73,7 +87,12 @@ const auth = lucia({
     // @ts-expect-error
     Session: SessionModel
   }),
-  env: "DEV",
+  sessionCookie: {
+    name: "auth_session",
+    expires: false,
+    attributes: { sameSite: "lax", domain: DOMAIN, path: "/" }
+  },
+  env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
   middleware: express(),
   csrfProtection: false,
   getUserAttributes: (data) => {
@@ -111,10 +130,6 @@ class UserRoute {
     this.router.get(`${this.path}/me`, this.user.getCurrentUser);
   }
 }
-config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
-const CREDENTIALS = process.env.CREDENTIALS === "true";
-const { NODE_ENV, PORT, SECRET_KEY, LOG_FORMAT, LOG_DIR, ORIGIN } = process.env;
-const { DATABASE } = process.env;
 const dbConnection = async () => {
   const dbConfig = {
     url: DATABASE,
@@ -202,6 +217,8 @@ class AuthController {
   constructor() {
     this.signIn = async (req, res, next) => {
       try {
+        console.log("ELO", ELO);
+        console.log("DOMAIN", DOMAIN);
         const { username, password } = req.body;
         if (typeof username !== "string" || username.length < 1 || username.length > 31) {
           await res.status(400).send("Invalid username");
@@ -209,7 +226,11 @@ class AuthController {
         if (typeof password !== "string" || password.length < 1 || password.length > 255) {
           await res.status(400).send("Invalid password");
         }
-        const key = await auth.useKey("username", username.toLowerCase(), password);
+        const key = await auth.useKey(
+          "username",
+          username.toLowerCase(),
+          password
+        );
         const session = await auth.createSession({
           userId: key.userId,
           attributes: {}
@@ -222,22 +243,21 @@ class AuthController {
         next(error);
       }
     };
+    this.logOut = async (req, res, next) => {
+      try {
+        const authRequest = auth.handleRequest(req, res);
+        const session = await authRequest.validate();
+        if (!session) {
+          return res.sendStatus(401);
+        }
+        await auth.invalidateSession(session.sessionId);
+        authRequest.setSession(null);
+        return res.status(200).json({ message: "success" });
+      } catch (error) {
+        next(error);
+      }
+    };
   }
-  // public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-  //   try {
-  //     const authRequest = auth.handleRequest(req, res);
-  //     const session = await authRequest.validate(); // or `authRequest.validateBearerToken()`
-  //     if (!session) {
-  //       return res.sendStatus(401);
-  //     }
-  //     await auth.invalidateSession(session.sessionId);
-  //     authRequest.setSession(null); // for session cookie
-  //     // redirect back to login page
-  //     return res.status(200).json({ message: 'success' });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
 }
 class AuthRoute {
   constructor() {
@@ -248,6 +268,7 @@ class AuthRoute {
   }
   initializeRoutes() {
     this.router.post(`${this.path}/sign-in`, this.auth.signIn);
+    this.router.post(`${this.path}/logout`, this.auth.logOut);
   }
 }
 const PlaceCategory = {
