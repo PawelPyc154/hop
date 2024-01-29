@@ -31,7 +31,7 @@ export const Places = () => {
   const { isAuthenticated } = useAuth();
 
   if (places.isLoading) {
-    return <Spinner />;
+    return <Spinner color="teal" />;
   }
 
   return (

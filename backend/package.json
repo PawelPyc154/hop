@@ -10,7 +10,8 @@
     "build": "vite build",
     "start": "node dist/index.jsh",
     "test": "jest --forceExit --detectOpenHandles",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/"
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
+    "seed": "tsc && node dist/seeder/seeder.js"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.0",
