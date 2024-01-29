@@ -1,13 +1,7 @@
-import {
-  IsEmail,
-  IsString,
-  IsNotEmpty,
-  MinLength,
-  MaxLength,
-} from "class-validator";
+import { IsString, IsNotEmpty, MinLength, MaxLength } from "class-validator";
 
 export class AuthUserDto {
-  @IsEmail()
+  @IsString()
   public username: string;
 
   @IsString()

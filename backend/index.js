@@ -14,7 +14,7 @@ import hpp from "hpp";
 import morgan from "morgan";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, validateOrReject } from "class-validator";
+import { IsString, IsNotEmpty, MinLength, MaxLength, validateOrReject } from "class-validator";
 import { plainToInstance } from "class-transformer";
 import { z } from "zod";
 const KeySchema = new Schema(
@@ -309,7 +309,7 @@ var __decorateClass$1 = (decorators, target, key, kind) => {
 class AuthUserDto {
 }
 __decorateClass$1([
-  IsEmail()
+  IsString()
 ], AuthUserDto.prototype, "username", 2);
 __decorateClass$1([
   IsString(),
