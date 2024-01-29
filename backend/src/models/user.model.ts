@@ -1,5 +1,5 @@
-import { model, Schema, Document } from 'mongoose';
-import { User } from '../interfaces/users.interface';
+import { model, Schema, Document } from "mongoose";
+import { User } from "../interfaces/users.interface";
 
 const UserSchema: Schema = new Schema(
   {
@@ -12,7 +12,7 @@ const UserSchema: Schema = new Schema(
       required: true,
     },
   } as const,
-  { _id: false },
+  { _id: false }
 );
 
-export const UserModel = model('User', UserSchema);
+export const UserModel = model<User & Document>("User", UserSchema);

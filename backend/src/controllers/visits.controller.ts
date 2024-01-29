@@ -1,80 +1,83 @@
-import { NextFunction, Request, Response } from 'express';
-import { Container } from 'typedi';
-import { User } from '../interfaces/users.interface';
-// import { UserService } from '../services/users.service';
+import { NextFunction, Response } from "express";
 
-export class UserController {
-  // public user = Container.get(UserService);
+import { VisitModel } from "../models/visit.model";
+import { z } from "zod";
+import { visitStatuses } from "../interfaces/visit.interface";
+import mongoose from "mongoose";
+import { ServiceModel } from "../models/service.model";
+import { PlaceModel } from "../models/place.model";
+import { RequestWithUser } from "../interfaces/auth.interface";
+
+export class VisitController {
+  public getVisits = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const userId = req.user.userId;
+
+      const myVisits = await VisitModel.find({ user: userId })
+        .populate({
+          path: "service",
+          model: ServiceModel,
+          select: "title",
+        })
+        .populate({
+          path: "place",
+          model: PlaceModel,
+          select: "title",
+        });
+
+      const usersInfoSchema = z.array(
+        z
+          .object({
+            _id: z.string(),
+            visitDate: z.date(),
+            service: z
+              .object({ title: z.string() })
+              .transform((item) => item.title),
+
+            place: z
+              .object({ title: z.string() })
+              .transform((item) => item.title),
+            status: z.enum(visitStatuses),
+          })
+          .transform(({ _id, ...item }) => ({
+            id: _id,
+            ...item,
+          }))
+      );
+      const visits = await usersInfoSchema.parseAsync(myVisits);
+
+      await res.status(200).json({
+        items: visits,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+  public createVisit = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const userId = req.user.userId;
+
+      const { serviceId, placeId, visitDate } = req.body;
+
+      await VisitModel.create({
+        _id: new mongoose.Types.ObjectId(),
+        visitDate: visitDate,
+        service: serviceId,
+        place: placeId,
+        user: userId,
+      });
+
+      await res.status(200).json({ success: true });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
-
-// const router = express.Router();
-
-// router
-//   .get("/", async (req, res) => {
-//     const authRequest = auth.handleRequest(req, res);
-
-//     const session = await authRequest.validate(); // or `authRequest.validateBearerToken()`
-
-//     if (!session) {
-//       return res.status(401).send({ message: "Un" });
-//     }
-//     const user = session.user;
-//     const userId = user.userId;
-//     console.log(userId);
-//     const myVisits = await Visit.find()
-//       .populate("service", "title")
-//       .populate("place", "title");
-
-//     const usersInfoSchema = z.array(
-//       z
-//         .object({
-//           _id: z.string(),
-//           visitDate: z.date(),
-//           service: z
-//             .object({ title: z.string() })
-//             .transform((item) => item.title),
-
-//           place: z
-//             .object({ title: z.string() })
-//             .transform((item) => item.title),
-//           status: z.enum(visitStatutes),
-//         })
-//         .transform(({ _id, ...item }) => ({
-//           id: _id,
-//           ...item,
-//         }))
-//     );
-//     const visits = await usersInfoSchema.parseAsync(myVisits);
-
-//     await res.status(200).json({
-//       success: true,
-//       items: visits,
-//     });
-//   })
-// .post("/", async (req, res) => {
-//   const { serviceId, placeId } = req.body;
-//   const authRequest = auth.handleRequest(req, res);
-
-//   const session = await authRequest.validate(); // or `authRequest.validateBearerToken()`
-
-//   if (!session) {
-//     return res.status(401).send({ message: "Un" });
-//   }
-//   const user = session.user;
-//   const userId = user.userId;
-
-//   try {
-//     const myVisit = await Visit.create({
-//       _id: new mongoose.Types.ObjectId(),
-//       visitDate: new Date(),
-//       service: serviceId,
-//       place: placeId,
-//       user: userId,
-//     });
-//     console.log("myVisits", myVisit);
-//     await res.status(200).json({ success: true, items: "myVisits" });
-//   } catch (error) {
-//     console.log(error);
-//     await res.status(200).json({ success: true, items: "myVisits" });
-//   }
-// });

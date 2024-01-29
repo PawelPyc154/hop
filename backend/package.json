@@ -13,6 +13,7 @@
     "lint": "eslint --ignore-path .gitignore --ext .ts src/"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.0",
     "@lucia-auth/adapter-mongoose": "^3.0.1",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
@@ -34,9 +35,11 @@
     "swagger-ui-express": "^4.5.0",
     "typedi": "^0.10.0",
     "vite": "^5.0.12",
+    "vite-express": "^0.14.1",
     "vite-plugin-node": "^3.1.0",
     "winston": "^3.8.1",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston-daily-rotate-file": "^4.7.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",

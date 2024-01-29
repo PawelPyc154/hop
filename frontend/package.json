@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "seed": "tsc & node build/index.js"
   },
   "dependencies": {
     "@aslakson/tippyjs-react": "^4.2.6",

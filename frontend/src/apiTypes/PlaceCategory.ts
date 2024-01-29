@@ -9,15 +9,6 @@ export const PlaceCategory = {
   dentist: "dentist",
 } as const;
 
-export const placeCategories = Object.values(PlaceCategory);
-
 export type PlaceCategory = (typeof placeCategories)[number];
 
-export interface Place {
-  _id?: string;
-  username: string;
-  title: string;
-  description: string;
-  category: PlaceCategory;
-  image: string;
-}
+export const placeCategories = Object.values(PlaceCategory);

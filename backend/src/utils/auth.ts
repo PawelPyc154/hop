@@ -17,11 +17,17 @@ export const auth = lucia({
     // @ts-expect-error
     Session: SessionModel,
   }),
-  sessionCookie: {
-    name: "auth_session",
-    expires: false,
-    attributes: { sameSite: "none", domain: DOMAIN, path: "/" },
-  },
+  ...(process.env.NODE_ENV !== "development" && {
+    sessionCookie: {
+      name: "auth_session",
+      expires: false,
+      attributes: {
+        sameSite: "none",
+        domain: DOMAIN,
+        path: "/",
+      },
+    },
+  }),
   env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
   middleware: express(),
   csrfProtection: false,

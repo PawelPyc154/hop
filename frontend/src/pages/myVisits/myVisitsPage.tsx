@@ -95,12 +95,12 @@ export const MyVisitsPage = () => {
     [],
   );
   const places = useQuery({
-    queryKey: ["my-visits"],
+    queryKey: ["visits"],
     queryFn: async () =>
       axios
         .get<{
           items: Visit[];
-        }>(`/my-visits`, { withCredentials: true })
+        }>(`/visits`, { withCredentials: true })
         .then((r) => r.data),
   });
   return (

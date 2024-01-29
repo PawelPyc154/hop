@@ -1,11 +1,12 @@
-import { Place, Service, connectDB } from "database";
-import { randomUUID } from "crypto";
 import { faker } from "@faker-js/faker";
 
-import { placeCategories } from "types";
 import mongoose from "mongoose";
+import { placeCategories } from "../interfaces/place.interface";
+import { dbConnection } from "../database";
+import { PlaceModel } from "../models/place.model";
+import { ServiceModel } from "../models/service.model";
 
-connectDB();
+dbConnection();
 
 const importData = async () => {
   try {
@@ -16,7 +17,7 @@ const importData = async () => {
     };
 
     const places = Array.from({ length: 50 }, (item, index) => {
-      return new Place({
+      return new PlaceModel({
         _id: new mongoose.Types.ObjectId(),
         title: faker.lorem.sentence(2),
         description: faker.lorem.sentence(50),
@@ -32,10 +33,11 @@ const importData = async () => {
       title: faker.lorem.sentence(4),
       price: faker.number.float({ min: 10, max: 500, precision: 10 }),
       place: faker.helpers.arrayElement(_ids),
-    })).map((v) => new Service(v));
+    })).map((v) => new ServiceModel(v));
 
     places.forEach((category) =>
       service.map((expense) => {
+        // @ts-expect-error
         if (expense.place?.equals(category._id)) {
           // @ts-expect-error
           category.services.push(expense._id);
@@ -55,8 +57,8 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    await Place.deleteMany();
-    await Service.deleteMany();
+    await PlaceModel.deleteMany();
+    await ServiceModel.deleteMany();
 
     console.log("Data Destroyed...");
     process.exit();

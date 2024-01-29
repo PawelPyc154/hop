@@ -14,18 +14,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryKey: ["user"],
     queryFn: () =>
       axios.get("/users/me", { withCredentials: true }).then((res) => res.data),
-    // staleTime: 0,
-    // gcTime: 0,
   });
-  const user = userQuery.data;
-  const isAuthenticated = !!user;
-  // console.log("user", user, userQuery.error);
-  // console.log("isAuthenticated", isAuthenticated);
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user: user }}>
-      {children}
-    </AuthContext.Provider>
+
+  const value = React.useMemo(
+    () => ({ isAuthenticated: !!userQuery.data, user: userQuery.data }),
+    [userQuery.data],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

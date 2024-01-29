@@ -7,6 +7,7 @@ import { Heading } from "../../../components/common/heading";
 import { DialogTrigger } from "../../../components/common/dialog/dialogTrigger";
 import { ConfirmServiceDialogContent } from "./confirmServiceDialogContent";
 import { useAuth } from "../../../context/auth";
+import { Spinner } from "../../../components/common/spinner";
 
 export const Places = () => {
   const { category } = useParams<"category">();
@@ -22,10 +23,17 @@ export const Places = () => {
             image: string;
             services: { _id: string; title: string; price: string }[];
           }[];
-        }>(`/places${category ? `/${category}` : ""}`)
+        }>(`/places`, {
+          params: { category: category },
+        })
         .then((r) => r.data),
   });
   const { isAuthenticated } = useAuth();
+
+  if (places.isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <Container>
       {places.data?.items.map(
@@ -62,7 +70,7 @@ export const Places = () => {
                             Umów
                           </Button>
                         }
-                        title={"Title"}
+                        title={item.title}
                       >
                         {() => (
                           <ConfirmServiceDialogContent
@@ -81,7 +89,7 @@ export const Places = () => {
               </ServicesList>
             </Services>
           </Wrapper>
-        )
+        ),
       )}
     </Container>
   );

@@ -11,7 +11,7 @@ import swaggerUi from "swagger-ui-express";
 
 import { Routes } from "./interfaces/routes.interface";
 import { dbConnection } from "./database";
-import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from "./config";
+import { LOG_FORMAT, NODE_ENV, PORT } from "./config";
 import { ErrorMiddleware } from "./middlewares/error.middleware";
 
 export class App {
@@ -48,7 +48,6 @@ export class App {
   private async initializeMiddlewares() {
     this.app.use(express.urlencoded());
     this.app.use(morgan(LOG_FORMAT));
-    console.log(typeof ORIGIN);
     this.app.use(cors({ origin: true, credentials: true }));
     this.app.use(hpp());
     this.app.use(helmet());

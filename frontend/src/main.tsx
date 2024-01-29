@@ -8,7 +8,9 @@ import { BrowserRouter } from "react-router-dom";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 0 } },
+});
 
 const rootElement = document.getElementById("root")!;
 

@@ -18,40 +18,9 @@ export const TopBar = () => {
     gcTime: 1000 * 10,
   });
 
-  const emailPasswordSignInMutation = useMutation({
-    mutationKey: ["login"],
-    mutationFn: ({
-      username,
-      password,
-    }: {
-      username: string;
-      password: string;
-    }) =>
-      axios.post(
-        "/auth/sign-in",
-        {
-          username: username,
-          password: password,
-        },
-        { withCredentials: true },
-      ),
-  });
-
   return (
     <Container>
       <LeftWrapper>
-        <Button
-          color="gray"
-          onClick={() => {
-            emailPasswordSignInMutation.mutate({
-              username: "Login1",
-              password: "Tajne123$",
-            });
-          }}
-        >
-          Wyloguj
-        </Button>
-
         <LinkButton to="/" color="gray">
           Oferty
         </LinkButton>
