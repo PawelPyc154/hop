@@ -6,7 +6,7 @@ import {
   MaxLength,
 } from "class-validator";
 
-export class CreateUserDto {
+export class AuthUserDto {
   @IsEmail()
   public username: string;
 

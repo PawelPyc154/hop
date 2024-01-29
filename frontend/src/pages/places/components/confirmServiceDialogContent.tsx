@@ -36,7 +36,6 @@ export const ConfirmServiceDialogContent = ({
   const addVisitMutation = useMutation({
     mutationKey: ["add-visit"],
     mutationFn: (date: string) => {
-      console.log("date", date);
       return axios.post(
         "/visits",
         {
@@ -61,6 +60,7 @@ export const ConfirmServiceDialogContent = ({
     date.setMinutes(Number(minutes));
     addVisitMutation.mutate(date.toISOString());
   };
+
   return (
     <form
       onSubmit={emailPasswordSignInForm.handleSubmit(
