@@ -56,6 +56,8 @@ export const ConfirmServiceDialogContent = ({
   ) => {
     const date = new Date(values.day);
     const [hour, minutes] = values.hour.split(":");
+
+    date.setHours(Number(hour));
     date.setHours(Number(hour));
     date.setMinutes(Number(minutes));
     addVisitMutation.mutate(date.toISOString());

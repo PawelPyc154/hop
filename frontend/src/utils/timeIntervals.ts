@@ -53,7 +53,7 @@ export const next7Days = () => {
   const days = [];
 
   for (let i = 0; i < 7; i++) {
-    const day = new Date(year, month - 1, date + i);
+    const day = new Date(year, month, date + i);
     days.push(day);
   }
   const formatter = new Intl.DateTimeFormat("pl", {
