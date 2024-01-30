@@ -22,7 +22,7 @@ type EmailPasswordSignUpFormValues = z.infer<typeof emailPasswordSignInSchema>;
 
 export const SignInPage = () => {
   const emailPasswordSignInForm = useForm({
-    defaultValues: { username: "Login1", password: "Tajne123$" },
+    defaultValues: {},
 
     schema: emailPasswordSignInSchema,
   });

@@ -32,7 +32,7 @@ type EmailPasswordSignUpFormValues = z.infer<typeof emailPasswordSignUpSchema>;
 
 export const SignUpPage = () => {
   const emailPasswordSignUpForm = useForm({
-    defaultValues: { username: "Login1", password: "Tajne123$" },
+    defaultValues: {},
 
     schema: emailPasswordSignUpSchema,
   });
@@ -54,7 +54,7 @@ export const SignUpPage = () => {
           username,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       ),
     onSuccess: () => {
       navigate("/");
@@ -73,7 +73,7 @@ export const SignUpPage = () => {
   });
 
   const onSubmitEmailPasswordSignUp = async (
-    values: EmailPasswordSignUpFormValues
+    values: EmailPasswordSignUpFormValues,
   ) => {
     emailPasswordSignUpMutation.mutate({
       username: values.username,
@@ -86,7 +86,7 @@ export const SignUpPage = () => {
         <Section>
           <form
             onSubmit={emailPasswordSignUpForm.handleSubmit(
-              onSubmitEmailPasswordSignUp
+              onSubmitEmailPasswordSignUp,
             )}
             className="grid gap-4"
           >
@@ -135,7 +135,7 @@ export const SignUpPage = () => {
         </Section>
       </ChildrenWrapper>
 
-      <div className="flex gap-1 text-center justify-center">
+      <div className="flex justify-center gap-1 text-center">
         Masz już konto?
         <Link className="text-blue-600" to={"/login"}>
           Zaloguj się
