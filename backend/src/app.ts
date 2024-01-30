@@ -32,9 +32,7 @@ export class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
-      console.log("");
-    });
+    this.app.listen(this.port);
   }
 
   public getServer() {
