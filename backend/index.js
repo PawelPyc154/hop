@@ -14,20 +14,26 @@ import hpp from "hpp";
 import morgan from "morgan";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { IsString, IsNotEmpty, MinLength, MaxLength, validateOrReject } from "class-validator";
+import {
+  IsString,
+  IsNotEmpty,
+  MinLength,
+  MaxLength,
+  validateOrReject,
+} from "class-validator";
 import { plainToInstance } from "class-transformer";
 import { z } from "zod";
 const KeySchema = new Schema(
   {
     _id: {
       type: String,
-      required: true
+      required: true,
     },
     user_id: {
       type: String,
-      required: true
+      required: true,
     },
-    hashed_password: String
+    hashed_password: String,
   },
   { _id: false }
 );
@@ -36,12 +42,12 @@ const UserSchema = new Schema(
   {
     _id: {
       type: String,
-      required: true
+      required: true,
     },
     username: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   { _id: false }
 );
@@ -50,37 +56,28 @@ const SessionSchema = new Schema(
   {
     _id: {
       type: String,
-      required: true
+      required: true,
     },
     user_id: {
       type: String,
-      required: true
+      required: true,
     },
     active_expires: {
       type: Number,
-      required: true
+      required: true,
     },
     idle_expires: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   { _id: false }
 );
 const SessionModel = model("Session", SessionSchema);
 config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
 process.env.CREDENTIALS === "true";
-const {
-  NODE_ENV,
-  PORT,
-  SECRET_KEY,
-  LOG_FORMAT,
-  LOG_DIR,
-  ORIGIN,
-  DOMAIN,
-  ELO,
-  DATABASE
-} = process.env;
+const { NODE_ENV, PORT, LOG_FORMAT, LOG_DIR, ORIGIN, DOMAIN, ELO, DATABASE } =
+  process.env;
 const auth = lucia({
   adapter: mongoose({
     // @ts-expect-error
@@ -88,27 +85,27 @@ const auth = lucia({
     // @ts-expect-error
     Key: KeyModel,
     // @ts-expect-error
-    Session: SessionModel
+    Session: SessionModel,
   }),
-  ...process.env.NODE_ENV !== "development" && {
+  ...(process.env.NODE_ENV !== "development" && {
     sessionCookie: {
       name: "auth_session",
       expires: false,
       attributes: {
         sameSite: "none",
         domain: DOMAIN,
-        path: "/"
-      }
-    }
-  },
+        path: "/",
+      },
+    },
+  }),
   env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
   middleware: express(),
   csrfProtection: false,
   getUserAttributes: (data) => {
     return {
-      username: data.username
+      username: data.username,
     };
-  }
+  },
 });
 class UserController {
   constructor() {
@@ -142,7 +139,7 @@ class UserRoute {
 const dbConnection = async () => {
   const dbConfig = {
     url: DATABASE,
-    options: {}
+    options: {},
   };
   if (NODE_ENV !== "production") {
     set("debug", true);
@@ -205,10 +202,10 @@ class App {
         info: {
           title: "REST API",
           version: "1.0.0",
-          description: "Example docs"
-        }
+          description: "Example docs",
+        },
       },
-      apis: ["swagger.yaml"]
+      apis: ["swagger.yaml"],
     };
     const specs = swaggerJSDoc(options);
     this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
@@ -222,10 +219,18 @@ class AuthController {
     this.signUp = async (req, res, next) => {
       try {
         const { username, password } = req.body;
-        if (typeof username !== "string" || username.length < 4 || username.length > 31) {
+        if (
+          typeof username !== "string" ||
+          username.length < 4 ||
+          username.length > 31
+        ) {
           return res.status(400).send("Invalid username");
         }
-        if (typeof password !== "string" || password.length < 6 || password.length > 255) {
+        if (
+          typeof password !== "string" ||
+          password.length < 6 ||
+          password.length > 255
+        ) {
           return res.status(400).send("Invalid password");
         }
         const user = await auth.createUser({
@@ -235,16 +240,16 @@ class AuthController {
             // auth method
             providerUserId: username.toLowerCase(),
             // unique id when using "username" auth method
-            password
+            password,
             // hashed by Lucia
           },
           attributes: {
-            username
-          }
+            username,
+          },
         });
         const session = await auth.createSession({
           userId: user.userId,
-          attributes: {}
+          attributes: {},
         });
         const authRequest = auth.handleRequest(req, res);
         authRequest.setSession(session);
@@ -256,10 +261,18 @@ class AuthController {
     this.signIn = async (req, res, next) => {
       try {
         const { username, password } = req.body;
-        if (typeof username !== "string" || username.length < 1 || username.length > 31) {
+        if (
+          typeof username !== "string" ||
+          username.length < 1 ||
+          username.length > 31
+        ) {
           await res.status(400).send("Invalid username");
         }
-        if (typeof password !== "string" || password.length < 1 || password.length > 255) {
+        if (
+          typeof password !== "string" ||
+          password.length < 1 ||
+          password.length > 255
+        ) {
           await res.status(400).send("Invalid password");
         }
         const key = await auth.useKey(
@@ -269,7 +282,7 @@ class AuthController {
         );
         const session = await auth.createSession({
           userId: key.userId,
-          attributes: {}
+          attributes: {},
         });
         const authRequest = auth.handleRequest(req, res);
         authRequest.setSession(session);
@@ -298,25 +311,23 @@ class AuthController {
 var __defProp$1 = Object.defineProperty;
 var __getOwnPropDesc$1 = Object.getOwnPropertyDescriptor;
 var __decorateClass$1 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$1(target, key) : target;
+  var result =
+    kind > 1 ? void 0 : kind ? __getOwnPropDesc$1(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
-    if (decorator = decorators[i])
-      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result)
-    __defProp$1(target, key, result);
+    if ((decorator = decorators[i]))
+      result =
+        (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result) __defProp$1(target, key, result);
   return result;
 };
-class AuthUserDto {
-}
-__decorateClass$1([
-  IsString()
-], AuthUserDto.prototype, "username", 2);
-__decorateClass$1([
-  IsString(),
-  IsNotEmpty(),
-  MinLength(9),
-  MaxLength(32)
-], AuthUserDto.prototype, "password", 2);
+class AuthUserDto {}
+__decorateClass$1([IsString()], AuthUserDto.prototype, "username", 2);
+__decorateClass$1(
+  [IsString(), IsNotEmpty(), MinLength(9), MaxLength(32)],
+  AuthUserDto.prototype,
+  "password",
+  2
+);
 class HttpException extends Error {
   constructor(status, message) {
     super(message);
@@ -324,20 +335,29 @@ class HttpException extends Error {
     this.message = message;
   }
 }
-const ValidationMiddleware = (type, skipMissingProperties = false, whitelist = false, forbidNonWhitelisted = false) => {
+const ValidationMiddleware = (
+  type,
+  skipMissingProperties = false,
+  whitelist = false,
+  forbidNonWhitelisted = false
+) => {
   return (req, res, next) => {
     const dto = plainToInstance(type, req.body);
     validateOrReject(dto, {
       skipMissingProperties,
       whitelist,
-      forbidNonWhitelisted
-    }).then(() => {
-      req.body = dto;
-      next();
-    }).catch((errors) => {
-      const message = errors.map((error) => Object.values(error.constraints)).join(", ");
-      next(new HttpException(400, message));
-    });
+      forbidNonWhitelisted,
+    })
+      .then(() => {
+        req.body = dto;
+        next();
+      })
+      .catch((errors) => {
+        const message = errors
+          .map((error) => Object.values(error.constraints))
+          .join(", ");
+        next(new HttpException(400, message));
+      });
   };
 };
 class AuthRoute {
@@ -369,48 +389,48 @@ const PlaceCategory = {
   massage: "massage",
   pets: "pets",
   physiotherapy: "physiotherapy",
-  dentist: "dentist"
+  dentist: "dentist",
 };
 const placeCategories = Object.values(PlaceCategory);
 const PlaceSchema = new Schema({
   _id: {
     type: String,
-    required: true
+    required: true,
   },
   title: {
     type: String,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
   },
   category: {
     type: String,
     enum: placeCategories,
-    default: "barber"
+    default: "barber",
   },
   image: {
     type: String,
-    required: true
+    required: true,
   },
-  services: [{ type: Schema.Types.ObjectId, ref: "Service" }]
+  services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
 });
 const PlaceModel = model("Place", PlaceSchema);
 const ServiceSchema = new Schema({
   _id: {
     type: String,
-    required: true
+    required: true,
   },
   title: {
     type: String,
-    trim: true
+    trim: true,
   },
   price: {
     type: String,
-    trim: true
+    trim: true,
   },
-  place: { type: Schema.Types.ObjectId, ref: "Place" }
+  place: { type: Schema.Types.ObjectId, ref: "Place" },
 });
 const ServiceModel = model("Service", ServiceSchema);
 class PlaceController {
@@ -419,10 +439,10 @@ class PlaceController {
       try {
         const category = req.query.category;
         const places = await PlaceModel.find({
-          ...category && { category }
+          ...(category && { category }),
         }).populate({
           path: "services",
-          model: ServiceModel
+          model: ServiceModel,
         });
         await res.status(200).json({ items: places });
       } catch (error) {
@@ -446,18 +466,13 @@ const VisitStatus = {
   pending: "pending",
   completed: "completed",
   canceled: "canceled",
-  confirmed: "confirmed"
+  confirmed: "confirmed",
 };
-const visitStatuses = [
-  "pending",
-  "completed",
-  "canceled",
-  "confirmed"
-];
+const visitStatuses = ["pending", "completed", "canceled", "confirmed"];
 const VisitSchema = new Schema({
   _id: {
     type: String,
-    required: true
+    required: true,
   },
   visitDate: { type: Date, require: true },
   place: { type: Schema.Types.ObjectId, ref: "Place", require: true },
@@ -466,8 +481,8 @@ const VisitSchema = new Schema({
   status: {
     type: String,
     enum: visitStatuses,
-    default: VisitStatus.pending
-  }
+    default: VisitStatus.pending,
+  },
 });
 const VisitModel = model("Visits", VisitSchema);
 class VisitController {
@@ -475,30 +490,38 @@ class VisitController {
     this.getVisits = async (req, res, next) => {
       try {
         const userId = req.user.userId;
-        const myVisits = await VisitModel.find({ user: userId }).populate({
-          path: "service",
-          model: ServiceModel,
-          select: "title"
-        }).populate({
-          path: "place",
-          model: PlaceModel,
-          select: "title"
-        });
+        const myVisits = await VisitModel.find({ user: userId })
+          .populate({
+            path: "service",
+            model: ServiceModel,
+            select: "title",
+          })
+          .populate({
+            path: "place",
+            model: PlaceModel,
+            select: "title",
+          });
         const usersInfoSchema = z.array(
-          z.object({
-            _id: z.string(),
-            visitDate: z.date(),
-            service: z.object({ title: z.string() }).transform((item) => item.title),
-            place: z.object({ title: z.string() }).transform((item) => item.title),
-            status: z.enum(visitStatuses)
-          }).transform(({ _id, ...item }) => ({
-            id: _id,
-            ...item
-          }))
+          z
+            .object({
+              _id: z.string(),
+              visitDate: z.date(),
+              service: z
+                .object({ title: z.string() })
+                .transform((item) => item.title),
+              place: z
+                .object({ title: z.string() })
+                .transform((item) => item.title),
+              status: z.enum(visitStatuses),
+            })
+            .transform(({ _id, ...item }) => ({
+              id: _id,
+              ...item,
+            }))
         );
         const visits = await usersInfoSchema.parseAsync(myVisits);
         await res.status(200).json({
-          items: visits
+          items: visits,
         });
       } catch (error) {
         next(error);
@@ -513,7 +536,7 @@ class VisitController {
           visitDate,
           service: serviceId,
           place: placeId,
-          user: userId
+          user: userId,
         });
         await res.status(200).json({ success: true });
       } catch (error) {
@@ -541,25 +564,19 @@ const AuthMiddleware = async (req, res, next) => {
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __decorateClass = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+  var result =
+    kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
-    if (decorator = decorators[i])
-      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result)
-    __defProp(target, key, result);
+    if ((decorator = decorators[i]))
+      result =
+        (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result) __defProp(target, key, result);
   return result;
 };
-class CreateVisitDto {
-}
-__decorateClass([
-  IsString()
-], CreateVisitDto.prototype, "serviceId", 2);
-__decorateClass([
-  IsString()
-], CreateVisitDto.prototype, "placeId", 2);
-__decorateClass([
-  IsString()
-], CreateVisitDto.prototype, "visitDate", 2);
+class CreateVisitDto {}
+__decorateClass([IsString()], CreateVisitDto.prototype, "serviceId", 2);
+__decorateClass([IsString()], CreateVisitDto.prototype, "placeId", 2);
+__decorateClass([IsString()], CreateVisitDto.prototype, "visitDate", 2);
 class VisitRoute {
   constructor() {
     this.path = "/visits";
@@ -581,10 +598,8 @@ const app = new App([
   new UserRoute(),
   new VisitRoute(),
   new AuthRoute(),
-  new PlaceRoute()
+  new PlaceRoute(),
 ]);
 app.listen();
 const viteNodeApp = app.app;
-export {
-  viteNodeApp
-};
+export { viteNodeApp };
